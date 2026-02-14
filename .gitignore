@@ -1,0 +1,22 @@
+# MatVerse Network - .gitignore
+
+# Chaves privadas (NUNCA commitar!)
+privatekey
+*.key
+*.pem
+
+# Configurações com chaves
+wg0.conf
+*.conf
+!*.conf.template
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporários
+*.tmp
+*.bak
