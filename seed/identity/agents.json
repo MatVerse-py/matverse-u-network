@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "agents": [
+    {
+      "id": "operator",
+      "role": "admin",
+      "namespaces": ["*"],
+      "status": "active"
+    },
+    {
+      "id": "cassandra",
+      "role": "semantic_router",
+      "namespaces": ["public", "canonical", "operator"],
+      "status": "active"
+    },
+    {
+      "id": "llm_a",
+      "role": "llm_agent",
+      "namespaces": ["public", "lab_a"],
+      "status": "stage"
+    },
+    {
+      "id": "llm_b",
+      "role": "llm_agent",
+      "namespaces": ["public", "lab_b"],
+      "status": "stage"
+    }
+  ]
+}
