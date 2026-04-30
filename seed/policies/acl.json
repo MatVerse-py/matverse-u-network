@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "rules": {
+    "operator": {
+      "roles": ["admin"],
+      "namespaces": ["*"],
+      "actions": ["read", "write", "sync", "revoke", "audit"]
+    },
+    "cassandra": {
+      "roles": ["semantic_router"],
+      "namespaces": ["public", "canonical", "operator"],
+      "actions": ["read", "route", "summarize"]
+    },
+    "llm_a": {
+      "roles": ["llm_agent"],
+      "namespaces": ["public", "lab_a"],
+      "actions": ["read", "write"]
+    },
+    "llm_b": {
+      "roles": ["llm_agent"],
+      "namespaces": ["public", "lab_b"],
+      "actions": ["read", "write"]
+    }
+  }
+}
