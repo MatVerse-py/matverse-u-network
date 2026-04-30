@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "nodes": [
+    {
+      "id": "core",
+      "role": "bunker",
+      "overlay_ip": "10.0.0.1",
+      "public_key_ref": "wg:core-public-key-placeholder",
+      "status": "active"
+    },
+    {
+      "id": "twin",
+      "role": "lab_node",
+      "overlay_ip": "10.0.0.2",
+      "public_key_ref": "wg:twin-public-key-placeholder",
+      "status": "active"
+    },
+    {
+      "id": "mobile",
+      "role": "mobile_node",
+      "overlay_ip": "10.0.0.5",
+      "public_key_ref": "wg:mobile-public-key-placeholder",
+      "status": "stage"
+    }
+  ]
+}
