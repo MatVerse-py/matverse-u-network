@@ -1,0 +1,117 @@
+services:
+  edge:
+    image: caddy:2.8-alpine
+    container_name: matverse-edge
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - omega-api
+      - chatpriv-relay
+    networks:
+      - edge
+      - app
+
+  omega-api:
+    build:
+      context: ./services/omega-api
+    container_name: matverse-omega-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./data/ledger:/data/ledger
+    networks:
+      - app
+      - ledger
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2).read()"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+
+  chatpriv-relay:
+    build:
+      context: ./services/chatpriv-relay
+    container_name: matverse-chatpriv-relay
+    restart: unless-stopped
+    env_file:
+      - .env
+    networks:
+      - app
+    expose:
+      - "8787"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8787/health', timeout=2).read()"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    container_name: matverse-redis
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    restart: unless-stopped
+    networks:
+      - data
+    expose:
+      - "6379"
+    profiles:
+      - data
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: matverse-postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - data
+    expose:
+      - "5432"
+    profiles:
+      - data
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: matverse-prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - obs
+      - app
+    expose:
+      - "9090"
+    profiles:
+      - obs
+
+networks:
+  edge:
+    name: matverse_edge
+  app:
+    name: matverse_app
+    internal: true
+  data:
+    name: matverse_data
+    internal: true
+  ledger:
+    name: matverse_ledger
+    internal: true
+  obs:
+    name: matverse_obs
+    internal: true
+
+volumes:
+  caddy_data:
+  caddy_config:
+  pg_data:
