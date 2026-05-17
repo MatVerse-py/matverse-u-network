@@ -1,0 +1,19 @@
+{
+  "name": "matverse-network-runtime-v0.1",
+  "policy": {
+    "public_ports": [80, 443],
+    "fail_closed": true,
+    "min_psi": 0.85,
+    "max_cvar": 0.05,
+    "min_omega": 0.85
+  },
+  "services": {
+    "edge": {"public": true, "ports": [80, 443]},
+    "omega-api": {"public": false, "expose": [8000]},
+    "chatpriv-relay": {"public": false, "expose": [8787]},
+    "redis": {"public": false, "profile": "data"},
+    "postgres": {"public": false, "profile": "data"},
+    "prometheus": {"public": false, "profile": "obs"}
+  },
+  "contract": "evento → detector → flag neycsec01 → Ω-Gate → bloqueio → solução"
+}
