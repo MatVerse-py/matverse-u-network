@@ -1,0 +1,68 @@
+{
+  admin off
+  auto_https off
+}
+
+:80 {
+  encode zstd gzip
+
+  header {
+    X-Frame-Options "DENY"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer"
+    Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), fullscreen=(self)"
+    Content-Security-Policy "default-src 'self'; connect-src 'self' ws: wss:; img-src 'self' data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+    Cache-Control "no-store"
+  }
+
+  handle /health {
+    reverse_proxy omega-api:8000
+  }
+
+  handle /v1/* {
+    reverse_proxy omega-api:8000
+  }
+
+  handle /ws/* {
+    reverse_proxy chatpriv-relay:8787
+  }
+
+  handle /relay/* {
+    reverse_proxy chatpriv-relay:8787
+  }
+
+  respond "MatVerse edge online. Public surface: /health, /v1/*, /ws/*" 200
+}
+
+:443 {
+  tls internal
+  encode zstd gzip
+
+  header {
+    Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    X-Frame-Options "DENY"
+    X-Content-Type-Options "nosniff"
+    Referrer-Policy "no-referrer"
+    Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), fullscreen=(self)"
+    Content-Security-Policy "default-src 'self'; connect-src 'self' ws: wss:; img-src 'self' data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+    Cache-Control "no-store"
+  }
+
+  handle /health {
+    reverse_proxy omega-api:8000
+  }
+
+  handle /v1/* {
+    reverse_proxy omega-api:8000
+  }
+
+  handle /ws/* {
+    reverse_proxy chatpriv-relay:8787
+  }
+
+  handle /relay/* {
+    reverse_proxy chatpriv-relay:8787
+  }
+
+  respond "MatVerse edge online over local TLS." 200
+}
